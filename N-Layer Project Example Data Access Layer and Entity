@@ -1,0 +1,148 @@
+
+#Layer.Entity  (.NET Framework Class Library)
+
+
+
+#Abstract(Abstract File from Layer.Entity library)
+
+**I created to this interface and inherited to another class,because ı tried to escape the dependency.
+
+#IEntity(İnterface from Abstract File )
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Layer.Entity.Abstract
+{
+    public interface IEntity
+    {
+    }
+}
+
+##The Ending of Abstract File
+
+
+#Concart(Concart File from Layer.Entity library)
+
+**I called to Entity Framework for this project.Because this framework rescue to extremly ADO.NET codes or SQL queries in this project.
+#Entity Framework's benefit is we can create tables and columns with classes and classes's objects.But classes and classes's objects must be matching to tables and columns.İn short,we can write shorter codes with OOP techniques for database's queries.
+
+
+
+#Student(Class from Concart File)
+
+
+
+**Student class is actually table's name from School_Db database(Sql Server 2012)
+
+
+
+
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Layer.Entity.Abstract;
+
+namespace Layer.Entity.Concart
+{
+   public class Student:IEntity
+    {
+        **I used to this attribute because ID value is actaully primary key from School_Db.And if ı don't use this attribute,ı will             **catch the exception.
+        
+        [Key]
+         public int ID { get; set; }
+         public string Name { get; set; }
+         public string Surname { get; set; }
+         public int ClubID { get; set; }
+
+    }
+}
+
+
+
+
+
+#Student_Score(Class From Concart File)
+
+
+using Layer.Entity.Abstract;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Layer.Entity.Concart
+{
+   public class Student_Score:IEntity
+    {
+       **I told to why must we use this attribute([Key])
+       
+        [Key] 
+        public int StudentID { get; set; }
+        public int FirstExam { get; set; }
+        public int SecondExam { get; set; }
+        public int Project { get; set; }
+
+    }
+}
+
+
+
+#Student_Club(Class from Concart File)
+
+
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Layer.Entity.Abstract;
+
+namespace Layer.Entity.Concart
+{
+    public class Student_Club:IEntity
+    { 
+        **I told to why must we use this attribute([Key])
+        
+        [Key]
+        public int ClubID { get; set; }
+        public string ClubName { get; set; }
+    }
+}
+
+
+##The Ending of Concart File
+
+####The Ending of Layer.Entity library
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
