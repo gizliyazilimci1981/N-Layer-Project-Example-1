@@ -1,13 +1,13 @@
 
-#Layer.Entity  (.NET Framework Class Library)
+####Layer.Entity  (.NET Framework Class Library) *Entity Layer
 
 
 
-#Abstract(Abstract File from Layer.Entity library)
+##Abstract(Abstract Folder from Layer.Entity library)
 
 **I created to this interface and inherited to another class,because ı tried to escape the dependency.
 
-#IEntity(İnterface from Abstract File )
+#IEntity(İnterface from Abstract Folder )
 
 using System;
 using System.Collections.Generic;
@@ -22,17 +22,17 @@ namespace Layer.Entity.Abstract
     }
 }
 
-##The Ending of Abstract File
+##The End of Abstract File
 
 
-#Concart(Concart File from Layer.Entity library)
+##Concart(Concart Folder from Layer.Entity library)
 
 **I called to Entity Framework for this project.Because this framework rescue to extremly ADO.NET codes or SQL queries in this project.
 #Entity Framework's benefit is we can create tables and columns with classes and classes's objects.But classes and classes's objects must be matching to tables and columns.İn short,we can write shorter codes with OOP techniques for database's queries.
 
 
 
-#Student(Class from Concart File)
+#Student(Class from Concart Folder)
 
 
 
@@ -53,13 +53,17 @@ namespace Layer.Entity.Concart
 {
    public class Student:IEntity
     {
-        **I used to this attribute because ID value is actaully primary key from School_Db.And if ı don't use this attribute,ı will             **catch the exception.
+        **I used to this attribute because ID value is actaully primary key from School_Db.And if ı don't use this attribute,
+          ı will catch the exception        
         
         [Key]
          public int ID { get; set; }
-         public string Name { get; set; }
+         public string Name { get; set; }       
          public string Surname { get; set; }
          public int ClubID { get; set; }
+         
+         
+         ** Every class's fields are actually columns from Student tables.
 
     }
 }
@@ -68,7 +72,7 @@ namespace Layer.Entity.Concart
 
 
 
-#Student_Score(Class From Concart File)
+#Student_Score(Class From Concart Folder)
 
 
 using Layer.Entity.Abstract;
@@ -96,7 +100,7 @@ namespace Layer.Entity.Concart
 
 
 
-#Student_Club(Class from Concart File)
+#Student_Club(Class from Concart Folder)
 
 
 using System;
@@ -120,14 +124,301 @@ namespace Layer.Entity.Concart
 }
 
 
-##The Ending of Concart File
+##The End of Concart File
 
-####The Ending of Layer.Entity library
-
-
+####The End of Layer.Entity library
 
 
-**I will continue to write
+
+
+####Layer.Data(.NET Framework Class Library) *Data Access Layer
+
+
+##Abstract(Abstract Folder from Layer.Data Library)
+
+
+
+
+
+#IRepository(Interface from Abstract Folder)
+
+**I created this interface because my goal is use the Repository design pattern.First of all,you can question to me about what is the repository design pattern.
+Repository design pattern collects to database query operations and this design pattern's benefit is we can centralize data to one place and at the same time,
+data's managment is very easy.Because we reduced data queries's opearations to one place.
+
+
+
+**Oh right,why did ı use this Interface?Could ı use one Repository class?Yes,But my goal is adapt to changing.Now,you can question to me
+about my goal.The reason is Let's say,we used the Entity Framework(ORM) our project;but one day if ı want to use the NHibernate(ORM),we should
+change a lot codes from Repository class.That is why we should create the base.We write functions  to base structer and after all,
+if we create the Repository class for Entity Framework or NHibernate,we can inherit these classes from base structer and make alteration by class.
+
+
+
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Text;
+using System.Threading.Tasks;
+using Layer.Entity.Abstract;
+
+namespace Layer.Data.Abstract
+{
+  public interface IRepository<T> where T:class,IEntity,new()
+  {
+      List<T> GetAll(Expression<Func<T,bool>> result=null); **We can use parameters to this method and at the same time we don't have to use parameters.
+      That is why we use to Expression delegate code.
+                                                           
+      void Add(T entity);
+      void Delete(T entity);
+      void Update(T entity);
+
+
+  }
+}
+
+
+
+
+
+
+#IStudentDAL(Interface from Abstract Folder)
+
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Layer.Entity.Concart;
+
+namespace Layer.Data.Abstract
+{
+   public interface IStudentDAL:IRepository<Student>
+    {
+    }
+}
+
+**IStudentDAL takes IRepository's functions and IRepository's generic type is Student class.This thing is really important.Because IRepository can
+adapt to change and any interface apply functions from IRepository interface.That's why we used Repository design pattern.
+
+
+
+
+#IStudent_Club_DAL(Interface from Abstract Folder)
+
+
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Layer.Entity.Concart;
+
+namespace Layer.Data.Abstract
+{
+    public interface IStudent_Club_DAL:IRepository<Student_Club>
+    {
+    }
+}
+
+
+
+
+
+
+
+
+#IStudent_Score_DAL(Interface from Abstract Folder)
+
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Layer.Entity.Concart;
+
+namespace Layer.Data.Abstract
+{
+   public interface IStudent_Score_DAL:IRepository<Student_Score>
+    {
+    }
+}
+
+
+##The End of Abstract Folder
+
+
+
+##Concart(Concart Folder from Layer.Data Class Library)
+
+
+##Entity Framework(Entity Framework Folder from Concart Folder)
+
+
+##Student Context (Class from Entity Framework Folder)
+
+**StudentContext inherited from DbContext and StudentContext create three models for database operations.
+using Layer.Entity.Concart;
+using System;
+using System.Collections.Generic;
+using System.Data.Entity;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Layer.Data.Concart.EntityFramework
+{
+    public class StudentContext:DbContext
+    {
+        public DbSet<Student> Students { get; set; }
+        public DbSet<Student_Club> Clubs { get; set; }
+        public DbSet<Student_Score> Scores { get; set; }
+    }
+}
+
+
+
+
+
+
+
+##Entity Framework Repository(Class from Entity Framework)
+
+
+using System;
+using System.Collections.Generic;
+using System.Data.Entity;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Text;
+using System.Threading.Tasks;
+using Layer.Data.Abstract;
+using Layer.Entity.Abstract;
+
+namespace Layer.Data.Concart.EntityFramework
+{
+    public class EntityFrameworkRepository<TEntites, TContext> : IRepository<TEntites> where TEntites :
+        class, IEntity, new() where TContext : DbContext, new()
+    {
+        public void Add(TEntites entity)
+        {
+            using (TContext context = new TContext())
+            {
+                var value = context.Entry(entity);
+                value.State = EntityState.Added;
+                context.SaveChanges();
+            }
+        }
+
+        public void Delete(TEntites entity)
+        {
+            using (TContext context = new TContext())
+            {
+                var value = context.Entry(entity);
+                value.State = EntityState.Deleted;
+                context.SaveChanges();
+            }
+        }
+
+        public List<TEntites> GetAll(Expression<Func<TEntites, bool>> result = null)
+        {
+            using (TContext context = new TContext())
+            {
+                return result == null
+                    ? context.Set<TEntites>().ToList() *İf function does not take any parameter    
+                    : context.Set<TEntites>().Where(result).ToList(); *else 
+            }
+        }
+
+        public void Update(TEntites entity)
+        {
+            using (TContext context = new TContext())
+            {
+                var value = context.Entry(entity);
+                value.State = EntityState.Modified;
+                context.SaveChanges();
+            }
+        }
+    }
+}
+
+
+
+#EntityFrameworkStudent (Class from Entity Framework)
+
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Layer.Data.Abstract;
+using Layer.Entity.Concart;
+
+namespace Layer.Data.Concart.EntityFramework
+{
+   public class EntityFrameworkStudent:EntityFrameworkRepository<Student,StudentContext>,IStudentDAL
+    {
+    
+    }
+}
+
+
+
+#EntityFrameworkStudentClub(Class from Entity Framework)
+
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Layer.Data.Abstract;
+using Layer.Entity.Concart;
+
+namespace Layer.Data.Concart.EntityFramework
+{
+   public class EntityFrameworkStudentClub:EntityFrameworkRepository<Student_Club,StudentContext>,IStudent_Club_DAL
+    {
+    }
+}
+
+
+
+
+
+
+
+#EntityFrameworkStudentScore
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Layer.Data.Abstract;
+using Layer.Entity.Concart;
+
+namespace Layer.Data.Concart.EntityFramework
+{
+    public class EntityFrameworkStudentScore:EntityFrameworkRepository<Student_Score,StudentContext>,IStudent_Score_DAL
+    {
+    
+    }
+}
+
+
+
+##The End of Concart Folder
+
+####The End of Layer.Data library
+
+
 
 
 
